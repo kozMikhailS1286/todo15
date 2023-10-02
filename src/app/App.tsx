@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { Menu } from '@mui/icons-material';
+import {LinearProgress} from "@mui/material";
+import {useDispatch} from "react-redux";
 
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
+                {status == "loading" && <LinearProgress /> }
             </AppBar>
             <Container fixed>
                 <TodolistsList/>
