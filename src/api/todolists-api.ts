@@ -51,6 +51,12 @@ export type ResponseType<D = {}> = {
 }
 
 
+export enum RESULT_CODE {
+    SUCCEEDED = 0,
+    ERROR = 1
+}
+
+
 export enum TaskStatuses {
     New = 0,
     InProgress = 1,
