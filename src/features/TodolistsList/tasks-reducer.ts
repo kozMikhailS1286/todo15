@@ -10,6 +10,7 @@ import {
 import {Dispatch} from 'redux'
 import {AppRootStateType} from '../../app/store'
 import {setAppStatusAC, setErrorAC, SetErrorActionType, SetStatusAType} from "../../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 const initialState: TasksStateType = {}
 
@@ -80,6 +81,7 @@ export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: D
 
 
 export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
+
     dispatch(setAppStatusAC("loading"))
     todolistsAPI.createTask(todolistId, title)
         .then(res => {
@@ -89,17 +91,11 @@ export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispa
                 dispatch(action)
                 dispatch(setAppStatusAC("succeeded"))
             } else {
-                if (res.data.messages.length) {
-                    dispatch(setErrorAC(res.data.messages[0]))
-                } else {
-                    dispatch(setErrorAC("Some error"))
-                }
+                handleServerAppError<{item: TaskType}>(dispatch, res.data)
             }
-            dispatch(setAppStatusAC("failed"))
         })
         .catch((error) => {
-            dispatch(setAppStatusAC("failed"))
-            dispatch(setErrorAC(error.message))
+            handleServerNetworkError(error, dispatch)
         })
 }
 export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) =>
